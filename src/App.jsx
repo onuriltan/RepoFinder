@@ -9,12 +9,12 @@ class App extends Component {
 
   state = {
     users: [],
-    loading: false
+    loading: true
   };
 
   async componentDidMount() {
     let res = await axios.get('https://api.github.com/users');
-    this.setState({users: res.data, loading: true});
+    this.setState({users: res.data, loading: false});
   }
 
 
