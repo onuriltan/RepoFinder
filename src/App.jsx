@@ -9,11 +9,14 @@ class App extends Component {
 
   state = {
     users: [],
-    loading: true
+    loading: false,
   };
 
   async componentDidMount() {
-    let res = await axios.get('https://api.github.com/users');
+    let github_client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
+    let github_client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+    this.setState({loading: true});
+    let res = await axios.get(`https://api.github.com/users?client_id=${github_client_id}&client_secret=${github_client_secret}`);
     this.setState({users: res.data, loading: false});
   }
 
