@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Navbar from './components/layout/Navbar';
+import Search from './components/users/Search';
 import Users from './components/users/Users';
 import axios from 'axios';
 
@@ -13,11 +14,24 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    let github_client_id = process.env.REACT_APP_GITHUB_CLIENT_ID;
-    let github_client_secret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
     this.setState({loading: true});
-    let res = await axios.get(`https://api.github.com/users?client_id=${github_client_id}&client_secret=${github_client_secret}`);
+    let res = await axios.get(`https://api.github.com/users?client_id=${
+        process.env.REACT_APP_GITHUB_CLIENT_ID
+        }&client_secret=${
+        process.env.REACT_APP_GITHUB_CLIENT_SECRET
+        }`);
     this.setState({users: res.data, loading: false});
+  }
+
+  // Search Github users
+  searchUsers = async text => {
+    this.setState({loading: true});
+    let res = await axios.get(`https://api.github.com/search/users?q=${text}&client_id=${
+        process.env.REACT_APP_GITHUB_CLIENT_ID
+    }&client_secret=${
+        process.env.REACT_APP_GITHUB_CLIENT_SECRET
+    }`);
+    this.setState({users: res.data.items, loading: false});
   }
 
 
@@ -27,6 +41,7 @@ class App extends Component {
         <div className="App">
           <Navbar title="Repo Finder" icon="fab fa-github"/>
           <div className="container">
+            <Search searchUsers={this.searchUsers}/>
             <Users loading={loading} users={users}/>
           </div>
         </div>
