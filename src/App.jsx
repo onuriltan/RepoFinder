@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Navbar from './components/layout/Navbar';
 import Search from './components/users/Search';
 import Users from './components/users/Users';
 import Alert from './components/layout/Alert'
 import axios from 'axios';
+import About from './components/pages/About'
 
 import './App.css';
 
@@ -34,33 +36,43 @@ class App extends Component {
         process.env.REACT_APP_GITHUB_CLIENT_SECRET
         }`);
     this.setState({users: res.data.items, loading: false});
-  }
+  };
 
   clearUsers = () => {
     this.setState({users: []})
-  }
+  };
 
   //Set Alert
   setAlert = (msg, type) => {
-    this.setState({alert : {msg, type}})
-    setTimeout( () => this.setState({alert: null}),5000)
-  }
+    this.setState({alert: {msg, type}})
+    setTimeout(() => this.setState({alert: null}), 5000)
+  };
 
 
   render() {
     const {users, loading, alert} = this.state;
     return (
-        <div className="App">
-          <Navbar title="Repo Finder" icon="fab fa-github"/>
-          <div className="container">
-            <Alert alert={alert} />
-            <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers}
-                    showClear={users.length > 0 ? true : false}
-                    alert={this.setAlert}
-            />
-            <Users loading={loading} users={users}/>
+        <Router>
+          <div className="App">
+            <Navbar title="Repo Finder" icon="fab fa-github"/>
+            <div className="container">
+              <Alert alert={alert}/>
+              <Switch>
+                <Route exact path='/' render={props => (
+                    <Fragment>
+                      <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers}
+                              showClear={users.length > 0}
+                              alert={this.setAlert}
+                      />
+                      <Users loading={loading} users={users}/>
+                    </Fragment>
+                )}/>
+                <Route exact path='/about' component={About} />
+              </Switch>
+            </div>
           </div>
-        </div>
+        </Router>
+
     );
   }
 
