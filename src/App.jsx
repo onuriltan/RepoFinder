@@ -96,7 +96,7 @@ const App = () => {
                 <Fragment>
                   <Search searchUsers={searchUsers} clearUsers={clearUsers}
                           showClear={users.length > 0}
-                          alert={setAlertMsg}
+                          setAlert={setAlertMsg}
                   />
                   <Users loading={loading} users={users}/>
                 </Fragment>
